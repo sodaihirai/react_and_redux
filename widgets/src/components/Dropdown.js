@@ -1,59 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-const Dropdown = ({ options }) => {
-  const [selection, setSelection] = useState(null);
-  const [visible, setVisible] = useState(false);
+const Dropdown = ({ options, selected, onSelectedChange }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef();
 
-  const onMenuClick = () => {
-    setVisible(!visible)
-  }
-
-  const onItemClick = (color) => {
-    setSelection(color)
-  }
-
-  const visibleFlag = () => {
-    return visible ? 'visible' : ''
-  }
+  useEffect(() => {
+    document.body.addEventListener("click", (event) => {
+      if (ref.current.contains(event.target)) {
+        return;
+      }
+      setOpen(false);
+    });
+  }, []);
 
   const renderItems = options.map((option) => {
-    return (
-      <div
-        style={{ pointerEvents: "all" }}
-        role="option"
-        aria-checked="false"
-        aria-selected="true"
-        className="selected item"
-        onClick={() => onItemClick(option.value)}
-      >
-        <span class="text">{option.label}</span>
-      </div>
-    );
+    if (option === selected) {
+      return null;
+    } else {
+      return (
+        <div
+          style={{ pointerEvents: "all" }}
+          key={option.value}
+          role="option"
+          aria-checked="false"
+          aria-selected="true"
+          className="selected item"
+          onClick={() => onSelectedChange(option)}
+        >
+          <span className="text">{option.label}</span>
+        </div>
+      );
+    }
   });
 
   return (
-    <div aria-expanded="false" className="ui search selection dropdown">
-      <input
-        type="text"
-        aria-autocomplete="list"
-        autocomplete="off"
-        class="search"
-        tabindex="0"
-        value=""
-      />
+    <div
+      aria-expanded="false"
+      className="ui search selection dropdown"
+      onClick={() => setOpen(!open)}
+      ref={ref}
+    >
       <div
         className="default text"
         role="alert"
         aria-live="polite"
         aria-atomic="true"
       >
-        State
+        {selected.label}
       </div>
-      <i aria-hidden="true" class="dropdown icon" onClick={() => onMenuClick()}></i>
-      <div role="listbox" class={`menu ${visibleFlag()} transition`}>
-        {renderItems}
+      <div>
+        <i aria-hidden="true" className="dropdown icon"></i>
+        <div
+          role="listbox"
+          className={`menu ${open ? "visible transition" : ""}`}
+        >
+          {renderItems}
+        </div>
       </div>
-      <div>{selection}</div>
     </div>
   );
 };
