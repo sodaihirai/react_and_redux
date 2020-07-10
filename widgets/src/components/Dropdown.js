@@ -3,14 +3,20 @@ import React, { useState, useEffect, useRef } from "react";
 const Dropdown = ({ options, selected, onSelectedChange }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef();
+  console.log(selected)
 
   useEffect(() => {
-    document.body.addEventListener("click", (event) => {
+    const onBodyClick = (event) => {
       if (ref.current.contains(event.target)) {
         return;
       }
       setOpen(false);
-    });
+    }
+    document.body.addEventListener("click", onBodyClick);
+
+    return () => {
+      document.body.removeEventListener('click', onBodyClick)
+    }
   }, []);
 
   const renderItems = options.map((option) => {
