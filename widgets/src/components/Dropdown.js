@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const Dropdown = ({ options, selected, onSelectedChange }) => {
+const Dropdown = ({ label, options, selected, onSelectedChange }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef();
-  console.log(selected)
 
   useEffect(() => {
     const onBodyClick = (event) => {
@@ -11,12 +10,12 @@ const Dropdown = ({ options, selected, onSelectedChange }) => {
         return;
       }
       setOpen(false);
-    }
+    };
     document.body.addEventListener("click", onBodyClick);
 
     return () => {
-      document.body.removeEventListener('click', onBodyClick)
-    }
+      document.body.removeEventListener("click", onBodyClick);
+    };
   }, []);
 
   const renderItems = options.map((option) => {
@@ -40,27 +39,30 @@ const Dropdown = ({ options, selected, onSelectedChange }) => {
   });
 
   return (
-    <div
-      aria-expanded="false"
-      className="ui search selection dropdown"
-      onClick={() => setOpen(!open)}
-      ref={ref}
-    >
+    <div>
+      <label className="label">{label}</label>
       <div
-        className="default text"
-        role="alert"
-        aria-live="polite"
-        aria-atomic="true"
+        aria-expanded="false"
+        className="ui search selection dropdown"
+        onClick={() => setOpen(!open)}
+        ref={ref}
       >
-        {selected.label}
-      </div>
-      <div>
-        <i aria-hidden="true" className="dropdown icon"></i>
         <div
-          role="listbox"
-          className={`menu ${open ? "visible transition" : ""}`}
+          className="default text"
+          role="alert"
+          aria-live="polite"
+          aria-atomic="true"
         >
-          {renderItems}
+          {selected.label}
+        </div>
+        <div>
+          <i aria-hidden="true" className="dropdown icon"></i>
+          <div
+            role="listbox"
+            className={`menu ${open ? "visible transition" : ""}`}
+          >
+            {renderItems}
+          </div>
         </div>
       </div>
     </div>

@@ -1,32 +1,25 @@
 import React, { useState } from "react";
 import Dropdown from "./Dropdown";
+import Convert from "./Convert";
+
+const options = [
+  {
+    label: "Afrikans",
+    value: "af",
+  },
+  {
+    label: "Arabic",
+    value: "ar",
+  },
+  {
+    label: "Hindi",
+    value: "hi",
+  },
+];
 
 const Translate = () => {
-  const options = [
-    {
-      label: "Spanish",
-      value: "spanish",
-    },
-    {
-      label: "English",
-      value: "english",
-    },
-    {
-      label: "Japanese",
-      value: "japanese",
-    },
-  ];
-
   const [term, setTerm] = useState("");
   const [language, setLanguage] = useState(options[0]);
-
-  const onInputChange = (event) => {
-    setTerm(event.target.value);
-  };
-
-  const onSelectedChange = (option) => {
-    setLanguage(option);
-  }
 
   return (
     <div>
@@ -37,13 +30,19 @@ const Translate = () => {
             className="input"
             type="text"
             value={term}
-            onChange={(e) => onInputChange(e)}
+            onChange={(e) => setTerm(e.target.value)}
           />
         </div>
       </div>
       <div>
-        <Dropdown options={options} selected={language} onSelectedChange={onSelectedChange}/>
+        <Dropdown
+          label="select language"
+          options={options}
+          selected={language}
+          onSelectedChange={setLanguage}
+        />
       </div>
+      <Convert language={language.value} term={term} />
     </div>
   );
 };
