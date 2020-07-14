@@ -5,44 +5,39 @@ import VideoList from "./VideoList";
 import VideoDetail from "./VideoDetail";
 
 export default () => {
-  const [term, setTerm] = useState("石田ゆり子");
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState("");
 
   useEffect(() => {
-    const searchVideo = async () => {
-      const response = await youtube.get("/search", {
-        params: {
-          q: term,
-          part: "snippet",
-          key: "AIzaSyDiNh4NN0v1WYHtFOiug15CJgtDNEFQlBU",
-        },
-      });
+    onTermSubmit("石田ゆり子");
+  }, []);
 
-      setVideos(response.data.items);
-      setSelectedVideo(response.data.items[0]);
-    };
-    searchVideo();
-  }, [term]);
+  const onTermSubmit = async (term) => {
+    const response = await youtube.get("/search", {
+      params: {
+        q: term,
+        part: "snippet",
+        key: "AIzaSyDiNh4NN0v1WYHtFOiug15CJgtDNEFQlBU",
+      },
+    });
 
-  const onVideoSelect = (video) => {
-    setSelectedVideo(video);
+    setVideos(response.data.items);
+    setSelectedVideo(response.data.items[0]);
   };
-
-  const onTermSubmit = (term) => {
-    setTerm(term)
-  }
 
   return (
     <div className="ui container">
-      <SearchBar onTermSubmit={onTermSubmit} />
+      <SearchBar onFormSubmit={onTermSubmit} />
       <div className="ui grid">
         <div className="ui row">
           <div className="eleven wide column">
             <VideoDetail video={selectedVideo} />
           </div>
           <div className="five wide column">
-            <VideoList videos={videos} onVideoSelect={onVideoSelect} />
+            <VideoList
+              videos={videos}
+              onVideoSelect={setSelectedVideo}
+            />
           </div>
         </div>
       </div>
