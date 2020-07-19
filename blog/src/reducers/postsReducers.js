@@ -1,7 +1,8 @@
-export const postsReducers = (posts = [], action) => {
-  if (action.type === "FETCH_POSTS") {
-    return action.payload
+export const postsReducers = (state = [], action) => {
+  switch (action.type) {
+    case "FETCH_POSTS":
+      return action.payload
+    default:
+      return state;
   }
-
-  return posts
 }
