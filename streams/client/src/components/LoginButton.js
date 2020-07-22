@@ -5,7 +5,7 @@ const LoginButton = () => {
   return(
     <Link to="/login">
       <button type="button">
-        Login
+        Login with Google
       </button>
     </Link>
   )
