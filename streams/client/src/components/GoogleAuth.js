@@ -1,7 +1,8 @@
 import React from "react";
+import { connect } from "react-redux";
+import { signIn, signOut } from "../actions"
 
 class GoogleAuth extends React.Component {
-  state = { isSignedIn: null }
 
   componentDidMount() {
     window.gapi.load("client:auth2", () => {
@@ -13,24 +14,59 @@ class GoogleAuth extends React.Component {
         })
         .then(() => {
           this.auth = window.gapi.auth2.getAuthInstance();
-          this.setState({ isSignedIn: this.auth.isSignedIn.get() });
+          this.onAuthChange();
+          this.auth.isSignedIn.listen(this.onAuthChange);
         });
     });
   }
 
-  renderAuthButton() {
-    if(this.state.isSignedIn === null) {
-      return <div>I dont konw if we are signed in</div>
-    } else if (this.state.isSignedIn === true) {
-      return <div>I am signed in!</div>
-    } else {
-      return <div>I am not signed in</div>
-    }
+  onAuthChange = () => {
+    signIn();
+  };
 
+  renderAuthButton() {
+    if (this.props.isSignedIn === null) {
+      return <div>I dont konw if we are signed in</div>;
+    } else if (this.props.isSignedIn === true) {
+      return (
+        <div>
+          <button className="ui red google button" onClick={this.onSignOutClick}>
+            <i className="google icon" />
+            Sign Out
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <button className="ui blue google button" onClick={this.onSignInClick}>
+          <i className="google icon" />
+          Sign In with Google
+        </button>
+      );
+    }
   }
+
+  onSignInClick = () => {
+    this.props.signIn()
+  };
+
+  onSignOutClick = () => {
+    this.props.signOut()
+  };
+
   render() {
-    return <div>{this.renderAuthButton()}</div>;
+    return (
+      <div>
+        <div>{this.renderAuthButton()}</div>
+      </div>
+    );
   }
 }
 
-export default GoogleAuth;
+const mapStateToProps = (state) => {
+  return {
+    isSignedIn: state.isSignedIn
+  }
+}
+
+export default connect(mapStateToProps, { signIn, signOut})(GoogleAuth);
