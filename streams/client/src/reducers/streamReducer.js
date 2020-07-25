@@ -14,7 +14,6 @@ export const streamReducer = (state = {}, action) => {
     case FETCH_STREAM:
       return { ...state, [action.payload.id]: action.payload };
     case CREATE_STREAM:
-      console.log(action.payload)
       return { ...state, [action.payload.id]: action.payload };
     case EDIT_STREAM:
       return { ...state, [action.payload.id]: action.payload };
