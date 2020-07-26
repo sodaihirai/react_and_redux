@@ -5,7 +5,7 @@ import { fetchStream, editStream } from "../../actions";
 import StreamForm from "./StreamForm";
 
 class StreamEdit extends React.Component {
-  componentDidMount = () => {
+  componentDidMount () {
     this.props.fetchStream(this.props.match.params.id);
   };
 
